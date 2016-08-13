@@ -10,16 +10,30 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var imageView: UIImageView!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        let sharedSession = NSURLSession.sharedSession()
+        
+        if let URL = NSURL(string: "http://bit.ly/2b5Wmkz") {
+            // Create Request
+            let request = NSURLRequest(URL: URL)
+            
+            // Create Data Task
+            let dataTask = sharedSession.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
+                if let data = data, let image = UIImage(data: data) {
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        self.imageView.image = image
+                    })
+                }
+            })
+            
+            dataTask.resume()
+        }
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
 
 }
 
